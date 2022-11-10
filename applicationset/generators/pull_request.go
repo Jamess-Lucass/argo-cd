@@ -134,6 +134,18 @@ func (g *PullRequestGenerator) selectServiceProvider(ctx context.Context, genera
 			return pullrequest.NewBitbucketServiceNoAuth(ctx, providerConfig.API, providerConfig.Project, providerConfig.Repo)
 		}
 	}
+	if generatorConfig.Bitbucket != nil {
+		providerConfig := generatorConfig.Bitbucket
+		if providerConfig.BasicAuth != nil {
+			password, err := g.getSecretRef(ctx, providerConfig.BasicAuth.PasswordRef, applicationSetInfo.Namespace)
+			if err != nil {
+				return nil, fmt.Errorf("error fetching Secret token: %v", err)
+			}
+			return pullrequest.NewBitbucketCloudServiceBasicAuth(providerConfig.BasicAuth.Username, password, providerConfig.API, providerConfig.Owner, providerConfig.Repo)
+		} else {
+			return pullrequest.NewBitbucketCloudServiceNoAuth(providerConfig.API, providerConfig.Owner, providerConfig.Repo)
+		}
+	}
 	return nil, fmt.Errorf("no Pull Request provider implementation configured")
 }
 

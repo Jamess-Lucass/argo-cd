@@ -180,6 +180,51 @@ If you want to access a private repository, you must also provide the credential
 * `username`: The username to authenticate with. It only needs read access to the relevant repo.
 * `passwordRef`: A `Secret` name and key containing the password or personal access token to use for requests.
 
+## Bitbucket Cloud
+
+Fetch pull requests from a repo hosted on a Bitbucket Cloud.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: myapps
+spec:
+  generators:
+    - pullRequest:
+        bitbucket:
+          # Workspace name where the repoistory is stored under. Required.
+          owner: myproject
+          # Repository slug. Required.
+          repo: myrepository
+          # URL of the Bitbucket Server. (optional) Will default to 'https://api.bitbucket.org/2.0'.
+          api: https://api.bitbucket.org/2.0
+          # Credentials for Basic authentication. Required for private repositories.
+          basicAuth:
+            # The username to authenticate with
+            username: myuser
+            # Reference to a Secret containing the password or personal access token.
+            passwordRef:
+              secretName: mypassword
+              key: password
+        # Labels are not supported by Bitbucket Cloud, so filtering by label is not possible.
+        # Filter PRs using the source branch name. (optional)
+        filters:
+          - branchMatch: ".*-argocd"
+  template:
+  # ...
+```
+
+- `owner`: Required name of the Bitbucket workspace
+- `repo`: Required name of the Bitbucket repository.
+- `api`: Optional URL to access the Bitbucket REST API. For the example above, an API request would be made to `https://api.bitbucket.org/2.0/repositories/{workspace}/{repo_slug}/pullrequests`. If not set, defaults to `https://api.bitbucket.org/2.0`
+- `branchMatch`: Optional regexp filter which should match the source branch name. This is an alternative to labels which are not supported by Bitbucket server.
+
+If you want to access a private repository, you must also provide the credentials for Basic auth (this is the only auth supported currently):
+
+- `username`: The username to authenticate with. It only needs read access to the relevant repo.
+- `passwordRef`: A `Secret` name and key containing the password or personal access token to use for requests.
+
 ## Filters
 
 Filters allow selecting which pull requests to generate for. Each filter can declare one or more conditions, all of which must pass. If multiple filters are present, any can match for a repository to be included. If no filters are specified, all pull requests will be processed.

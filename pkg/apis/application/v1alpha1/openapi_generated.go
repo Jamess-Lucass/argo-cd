@@ -93,6 +93,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.OverrideIgnoreDiff":                  schema_pkg_apis_application_v1alpha1_OverrideIgnoreDiff(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.ProjectRole":                         schema_pkg_apis_application_v1alpha1_ProjectRole(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGenerator":                schema_pkg_apis_application_v1alpha1_PullRequestGenerator(ref),
+		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorBitbucket":       schema_pkg_apis_application_v1alpha1_PullRequestGeneratorBitbucket(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorBitbucketServer": schema_pkg_apis_application_v1alpha1_PullRequestGeneratorBitbucketServer(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorFilter":          schema_pkg_apis_application_v1alpha1_PullRequestGeneratorFilter(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorGitLab":          schema_pkg_apis_application_v1alpha1_PullRequestGeneratorGitLab(ref),
@@ -3849,6 +3850,11 @@ func schema_pkg_apis_application_v1alpha1_PullRequestGenerator(ref common.Refere
 							Ref: ref("github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorBitbucketServer"),
 						},
 					},
+					"bitbucket": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorBitbucket"),
+						},
+					},
 					"filters": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Filters for which pull requests should be considered.",
@@ -3880,7 +3886,52 @@ func schema_pkg_apis_application_v1alpha1_PullRequestGenerator(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.ApplicationSetTemplate", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorBitbucketServer", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorFilter", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorGitLab", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorGitea", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorGithub"},
+			"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.ApplicationSetTemplate", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorBitbucket", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorBitbucketServer", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorFilter", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorGitLab", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorGitea", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.PullRequestGeneratorGithub"},
+	}
+}
+
+func schema_pkg_apis_application_v1alpha1_PullRequestGeneratorBitbucket(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PullRequestGenerator defines connection info specific to Bitbucket.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"owner": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Workspace to scan. Required.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"repo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Repo name to scan. Required.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"api": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The Bitbucket REST API URL to talk to. If blank, uses https://api.bitbucket.org/2.0.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"basicAuth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Credentials for Basic auth",
+							Ref:         ref("github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BasicAuthBitbucketServer"),
+						},
+					},
+				},
+				Required: []string{"owner", "repo"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BasicAuthBitbucketServer"},
 	}
 }
 

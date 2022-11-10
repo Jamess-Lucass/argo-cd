@@ -4564,6 +4564,36 @@ spec:
                                 x-kubernetes-preserve-unknown-fields: true
                               pullRequest:
                                 properties:
+                                  bitbucket:
+                                    properties:
+                                      api:
+                                        type: string
+                                      basicAuth:
+                                        properties:
+                                          passwordRef:
+                                            properties:
+                                              key:
+                                                type: string
+                                              secretName:
+                                                type: string
+                                            required:
+                                            - key
+                                            - secretName
+                                            type: object
+                                          username:
+                                            type: string
+                                        required:
+                                        - passwordRef
+                                        - username
+                                        type: object
+                                      owner:
+                                        type: string
+                                      repo:
+                                        type: string
+                                    required:
+                                    - owner
+                                    - repo
+                                    type: object
                                   bitbucketServer:
                                     properties:
                                       api:
@@ -6871,6 +6901,36 @@ spec:
                                 x-kubernetes-preserve-unknown-fields: true
                               pullRequest:
                                 properties:
+                                  bitbucket:
+                                    properties:
+                                      api:
+                                        type: string
+                                      basicAuth:
+                                        properties:
+                                          passwordRef:
+                                            properties:
+                                              key:
+                                                type: string
+                                              secretName:
+                                                type: string
+                                            required:
+                                            - key
+                                            - secretName
+                                            type: object
+                                          username:
+                                            type: string
+                                        required:
+                                        - passwordRef
+                                        - username
+                                        type: object
+                                      owner:
+                                        type: string
+                                      repo:
+                                        type: string
+                                    required:
+                                    - owner
+                                    - repo
+                                    type: object
                                   bitbucketServer:
                                     properties:
                                       api:
@@ -7999,6 +8059,36 @@ spec:
                       type: object
                     pullRequest:
                       properties:
+                        bitbucket:
+                          properties:
+                            api:
+                              type: string
+                            basicAuth:
+                              properties:
+                                passwordRef:
+                                  properties:
+                                    key:
+                                      type: string
+                                    secretName:
+                                      type: string
+                                  required:
+                                  - key
+                                  - secretName
+                                  type: object
+                                username:
+                                  type: string
+                              required:
+                              - passwordRef
+                              - username
+                              type: object
+                            owner:
+                              type: string
+                            repo:
+                              type: string
+                          required:
+                          - owner
+                          - repo
+                          type: object
                         bitbucketServer:
                           properties:
                             api:

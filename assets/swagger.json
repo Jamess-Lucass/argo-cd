@@ -6399,6 +6399,15 @@
         }
       }
     },
+    "v1alpha1BearerTokenBitbucketCloud": {
+      "description": "BearerTokenBitbucketCloud defines the Bearer token for BitBucket AppToken auth.",
+      "type": "object",
+      "properties": {
+        "tokenRef": {
+          "$ref": "#/definitions/v1alpha1SecretRef"
+        }
+      }
+    },
     "v1alpha1Cluster": {
       "type": "object",
       "title": "Cluster is the definition of a cluster resource",
@@ -7256,6 +7265,9 @@
         },
         "basicAuth": {
           "$ref": "#/definitions/v1alpha1BasicAuthBitbucketServer"
+        },
+        "bearerToken": {
+          "$ref": "#/definitions/v1alpha1BearerTokenBitbucketCloud"
         },
         "owner": {
           "description": "Workspace to scan. Required.",

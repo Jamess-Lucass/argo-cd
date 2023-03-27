@@ -623,6 +623,12 @@ message BasicAuthBitbucketServer {
   optional SecretRef passwordRef = 2;
 }
 
+// BearerTokenBitbucketCloud defines the Bearer token for BitBucket AppToken auth.
+message BearerTokenBitbucketCloud {
+  // Password (or personal access token) reference.
+  optional SecretRef tokenRef = 1;
+}
+
 // Cluster is the definition of a cluster resource
 message Cluster {
   // Server is the API server URL of the Kubernetes cluster
@@ -1202,6 +1208,9 @@ message PullRequestGeneratorBitbucket {
 
   // Credentials for Basic auth
   optional BasicAuthBitbucketServer basicAuth = 4;
+
+  // Credentials for AppToken (Bearer auth)
+  optional BearerTokenBitbucketCloud bearerToken = 5;
 }
 
 // PullRequestGenerator defines connection info specific to BitbucketServer.

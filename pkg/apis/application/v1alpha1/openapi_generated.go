@@ -54,6 +54,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.ApplicationWatchEvent":               schema_pkg_apis_application_v1alpha1_ApplicationWatchEvent(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.Backoff":                             schema_pkg_apis_application_v1alpha1_Backoff(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BasicAuthBitbucketServer":            schema_pkg_apis_application_v1alpha1_BasicAuthBitbucketServer(ref),
+		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BearerTokenBitbucketCloud":           schema_pkg_apis_application_v1alpha1_BearerTokenBitbucketCloud(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.Cluster":                             schema_pkg_apis_application_v1alpha1_Cluster(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.ClusterCacheInfo":                    schema_pkg_apis_application_v1alpha1_ClusterCacheInfo(ref),
 		"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.ClusterConfig":                       schema_pkg_apis_application_v1alpha1_ClusterConfig(ref),
@@ -2289,6 +2290,28 @@ func schema_pkg_apis_application_v1alpha1_BasicAuthBitbucketServer(ref common.Re
 	}
 }
 
+func schema_pkg_apis_application_v1alpha1_BearerTokenBitbucketCloud(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BearerTokenBitbucketCloud defines the Bearer token for BitBucket AppToken auth.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tokenRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Password (or personal access token) reference.",
+							Ref:         ref("github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.SecretRef"),
+						},
+					},
+				},
+				Required: []string{"tokenRef"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.SecretRef"},
+	}
+}
+
 func schema_pkg_apis_application_v1alpha1_Cluster(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -4292,12 +4315,18 @@ func schema_pkg_apis_application_v1alpha1_PullRequestGeneratorBitbucket(ref comm
 							Ref:         ref("github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BasicAuthBitbucketServer"),
 						},
 					},
+					"bearerToken": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Credentials for AppToken (Bearer auth)",
+							Ref:         ref("github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BearerTokenBitbucketCloud"),
+						},
+					},
 				},
 				Required: []string{"owner", "repo"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BasicAuthBitbucketServer"},
+			"github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BasicAuthBitbucketServer", "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1.BearerTokenBitbucketCloud"},
 	}
 }
 

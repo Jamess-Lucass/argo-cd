@@ -199,7 +199,8 @@ spec:
           repo: myrepository
           # URL of the Bitbucket Server. (optional) Will default to 'https://api.bitbucket.org/2.0'.
           api: https://api.bitbucket.org/2.0
-          # Credentials for Basic authentication. Required for private repositories.
+          # Credentials for Basic authentication (App Password). Either basicAuth or bearerToken
+          # authentication is required to access private repositories
           basicAuth:
             # The username to authenticate with
             username: myuser
@@ -207,6 +208,12 @@ spec:
             passwordRef:
               secretName: mypassword
               key: password
+          # Credentials for Bearer Token (App Token) authentication. Either basicAuth or bearerToken
+          # authentication is required to access private repositories
+          bearerToken:
+            tokenRef:
+              secretName: repotoken
+              key: token
         # Labels are not supported by Bitbucket Cloud, so filtering by label is not possible.
         # Filter PRs using the source branch name. (optional)
         filters:
@@ -220,10 +227,14 @@ spec:
 - `api`: Optional URL to access the Bitbucket REST API. For the example above, an API request would be made to `https://api.bitbucket.org/2.0/repositories/{workspace}/{repo_slug}/pullrequests`. If not set, defaults to `https://api.bitbucket.org/2.0`
 - `branchMatch`: Optional regexp filter which should match the source branch name. This is an alternative to labels which are not supported by Bitbucket server.
 
-If you want to access a private repository, you must also provide the credentials for Basic auth (this is the only auth supported currently):
+If you want to access a private repository, ArgoCD will need credentials to access repository in Bitbucket Cloud. You can use Bitbucket App Password (generated per user, with access to whole workspace), or Bitbucket App Token (generated per repository, with access limited to repository scope only). If both App Password and App Token are defined, App Token will be used.
 
+To use Bitbucket App Password, use `basicAuth` section.
 - `username`: The username to authenticate with. It only needs read access to the relevant repo.
 - `passwordRef`: A `Secret` name and key containing the password or personal access token to use for requests.
+
+In case of Bitbucket App Token, go with `bearerToken` section.
+- `tokenRef`: A `Secret` name and key containing the app token to use for requests.
 
 ## Filters
 

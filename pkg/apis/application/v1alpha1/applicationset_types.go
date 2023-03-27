@@ -526,6 +526,14 @@ type PullRequestGeneratorBitbucket struct {
 	API string `json:"api,omitempty" protobuf:"bytes,3,opt,name=api"`
 	// Credentials for Basic auth
 	BasicAuth *BasicAuthBitbucketServer `json:"basicAuth,omitempty" protobuf:"bytes,4,opt,name=basicAuth"`
+	// Credentials for AppToken (Bearer auth)
+	BearerToken *BearerTokenBitbucketCloud `json:"bearerToken,omitempty" protobuf:"bytes,5,opt,name=bearerToken"`
+}
+
+// BearerTokenBitbucketCloud defines the Bearer token for BitBucket AppToken auth.
+type BearerTokenBitbucketCloud struct {
+	// Password (or personal access token) reference.
+	TokenRef *SecretRef `json:"tokenRef" protobuf:"bytes,1,opt,name=tokenRef"`
 }
 
 // BasicAuthBitbucketServer defines the username/(password or personal access token) for Basic auth.

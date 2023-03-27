@@ -60,10 +60,32 @@ func TestInvalidBaseUrlBasicAuthCloud(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestInvalidBaseUrlBearerTokenCloud(t *testing.T) {
+	_, err := NewBitbucketCloudServiceBearerToken("http:// example.org", "OWNER", "REPO", "TOKEN")
+
+	assert.Error(t, err)
+}
+
 func TestInvalidBaseUrlNoAuthCloud(t *testing.T) {
 	_, err := NewBitbucketCloudServiceNoAuth("http:// example.org", "OWNER", "REPO")
 
 	assert.Error(t, err)
+}
+
+func TestListPullRequestBearerTokenCloud(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "Bearer TOKEN", r.Header.Get("Authorization"))
+		defaultHandlerCloud(t)(w, r)
+	}))
+	defer ts.Close()
+	svc, err := NewBitbucketCloudServiceBearerToken(ts.URL, "OWNER", "REPO", "TOKEN")
+	assert.NoError(t, err)
+	pullRequests, err := ListPullRequests(context.Background(), svc, []v1alpha1.PullRequestGeneratorFilter{})
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(pullRequests))
+	assert.Equal(t, 101, pullRequests[0].Number)
+	assert.Equal(t, "feature/foo-bar", pullRequests[0].Branch)
+	assert.Equal(t, "1a8dd249c04a", pullRequests[0].HeadSHA)
 }
 
 func TestListPullRequestNoAuthCloud(t *testing.T) {

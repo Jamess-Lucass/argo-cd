@@ -73,14 +73,13 @@ func NewBitbucketCloudServiceBasicAuth(username, password, baseUrl, owner, repos
 	}, nil
 }
 
-func NewBitbucketCloudServiceNoAuth(baseUrl, owner, repositorySlug string) (PullRequestService, error) {
+func NewBitbucketCloudServiceBearerToken(baseUrl, owner, repositorySlug string, bearerToken string) (PullRequestService, error) {
 	url, err := parseUrl(baseUrl)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing base url of %s for %s/%s: %v", baseUrl, owner, repositorySlug, err)
 	}
 
-	// There is currently no method to explicitly not require auth
-	bitbucketClient := bitbucket.NewOAuthbearerToken("")
+	bitbucketClient := bitbucket.NewOAuthbearerToken(bearerToken)
 	bitbucketClient.SetApiBaseURL(*url)
 
 	return &BitbucketCloudService{
@@ -88,6 +87,11 @@ func NewBitbucketCloudServiceNoAuth(baseUrl, owner, repositorySlug string) (Pull
 		owner:     	owner,
 		repositorySlug: repositorySlug,
 	}, nil
+}
+
+func NewBitbucketCloudServiceNoAuth(baseUrl, owner, repositorySlug string) (PullRequestService, error) {
+	// There is currently no method to explicitly not require auth
+	return NewBitbucketCloudServiceBearerToken(baseUrl, owner, repositorySlug, "")
 }
 
 func (b *BitbucketCloudService) List(_ context.Context) ([]*PullRequest, error) {
